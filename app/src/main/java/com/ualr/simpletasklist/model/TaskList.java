@@ -1,7 +1,69 @@
 package com.ualr.simpletasklist.model;
 
-public class TaskList {
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
+public class TaskList {
+    HashMap<Integer,Task> tasks = new HashMap<Integer,Task>();
+    static int taskID=1;
+    public HashMap<Integer, Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(HashMap<Integer, Task> tasks) {
+        this.tasks = tasks;
+    }
+
+    public TaskList() {
+
+    }
+
+    public void add(String description){
+        Task newTask = new Task();
+        newTask.setTaskDescription(description);
+        tasks.put(taskID++,newTask);
+    }
+
+    public String toString(){
+        String taskString = "";
+        TreeMap<Integer,Task> sorted = new TreeMap<>();
+        sorted.putAll(tasks);
+        for (Map.Entry<Integer,Task>entry:sorted.entrySet()){
+
+            String taskLine=entry.getKey() + "-" + entry.getValue().getTaskDescription();
+            if (entry.getValue().isTaskDone())
+                taskLine += "-Done";
+            taskString+=taskLine+"\n";
+        }
+
+        return taskString;
+    }
+
+    public void delete(String taskID){
+        if (isInteger(taskID)) {
+            Integer intID = Integer.parseInt(taskID);
+            tasks.remove(intID);
+        }
+    }
+
+    public void markDone(String taskID) {
+        if (isInteger(taskID)) {
+            Integer intID = Integer.parseInt(taskID);
+            if (tasks.containsKey(intID))
+                tasks.get(intID).setTaskDone(true);
+        }
+    }
+
+    public boolean isInteger(String input){
+        try{
+            Integer.parseInt(input);
+            return true;
+        }
+        catch(Exception e) {
+            return false;
+        }
+    }
     // TODO 03. Define TaskList's attributes. The class will have just one attribute to store all
     //  the tasks created by the user.
 
